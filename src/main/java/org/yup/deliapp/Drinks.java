@@ -8,7 +8,7 @@ public class Drinks extends OrderItem {
         this.size = size;
         this.flavor = flavor;
     }
-
+  
     public double getPrice(){
       double price;
 
@@ -28,6 +28,7 @@ public class Drinks extends OrderItem {
       }
 
       return price;
+
     }
 
 
