@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class Screens {
 
     static Scanner userScanner = new Scanner(System.in); //static scanner - will be able to use it throughout the class
-    static ArrayList<String> orderList = new ArrayList<>();
+    static ArrayList<OrderItem> orderList = new ArrayList<>();
 
     public static String homeScreen(){
         //the main screen or main menu
@@ -81,12 +81,14 @@ public class Screens {
 
             if (selectedSize.equals("SMALL") || selectedSize.equals("MEDIUM") || selectedSize.equals("LARGE")) {
                 Drinks drinkChoice = new Drinks(selectedSize, selectedFlavor);
-//                orderList.add(drinkChoice);
+                orderList.add(drinkChoice);
+
 
             } else {
                 System.out.println("Invalid size choice. Please try again.");
                 drinkOrder();
             }
+
         }catch(IllegalArgumentException e){
             System.out.println("Invalid flavor choice. Please try again.");
             drinkOrder();
