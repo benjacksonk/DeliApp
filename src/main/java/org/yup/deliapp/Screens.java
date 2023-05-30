@@ -1,11 +1,13 @@
 package org.yup.deliapp;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 //DO NOT TOUCH
 public class Screens {
 
     static Scanner userScanner = new Scanner(System.in);
+    static ArrayList<String> orderList = new ArrayList<>();
 
     public static String homeScreen(){
 
@@ -25,8 +27,10 @@ public class Screens {
         System.out.println("\tD * Add DRINKS");
         System.out.println("\tV * To VIEW Order");
         System.out.println("\tX * CANCEL Order");
+        System.out.println("\tH * Back to HOME screen");
         System.out.println("Please ENTER your selection: ");
         String orderScreenChoice = userScanner.nextLine();
+
 
         switch (orderScreenChoice.toLowerCase()){
             case "s":
@@ -38,9 +42,19 @@ public class Screens {
             case "v":
                 break;
             case "x":
+                cancelOrder();
                 break;
             default:
+                System.out.println("Please enter a VIABLE option.");
+                orderScreen();
                 break;
         }
+    }
+
+    public static void cancelOrder(){
+        orderList.clear();
+        System.out.println("Your order has been successfully CANCELED");
+        homeScreen();
+
     }
 }
