@@ -11,11 +11,11 @@ public class Drinks {
 
     public String getPrice(String drinkSize, DrinkFlavor flavor){
       double price = 0;
-        if(drinkSize.equals("Small")){
+        if(drinkSize.equals("SMALL")){
           price = 2.00;
-        } else if (drinkSize.equals("Medium")){
+        } else if (drinkSize.equals("MEDIUM")){
             price = 2.50;
-        } else if (drinkSize.equals("Large")){
+        } else if (drinkSize.equals("LARGE")){
             price = 3.00;
         } else {
           return  "Please choose appropriate size";
