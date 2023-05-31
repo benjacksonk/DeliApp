@@ -48,21 +48,12 @@ public class OrderManager {
         }
     }
 
-    private static int readOrderCounter() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("order_counter.txt"))) {
-            String numberLine = reader.readLine();
-            return Integer.parseInt(numberLine);
-        } catch (IOException | NumberFormatException e) {
-            return 0; // Default value if file not found or invalid value
-        }
-    }
-
     private static String generateFileName(UUID orderID) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter receiptFormat = DateTimeFormatter.ofPattern("yyyy.MM.dd_hh:mm:ss");
         String receiptDateTime = currentDateTime.format(receiptFormat);
 
-        return ordersDirectory + receiptDateTime + "_OrderID.:" + orderID.toString() + ".txt";
+        return ordersDirectory + receiptDateTime + "_OrderID:" + orderID.toString() + ".txt";
 
     }
 
@@ -81,13 +72,15 @@ public class OrderManager {
     private static String itemToString(OrderItem item) {
         if (item instanceof Sandwich) {
             Sandwich sandwich = (Sandwich) item;
-            return "Sandwich: ";
+            return "Sandwich: " + sandwich.getBreadType() + sandwich.getCheeses() + sandwich.getMeats()
+                    + sandwich.getFreeToppings() + sandwich.getSize() + "\n" +
+                    "Sandwich Total Cost: " + sandwich.getPrice();
         }else if (item instanceof Drinks) {
             Drinks drink = (Drinks) item;
-            return "Drink: " + drink.getFlavor();
+            return "Drink: " + drink.getFlavor() + "Drink Cost: " + drink.getPrice();
         }else if (item instanceof Chips) {
             Chips chips = (Chips) item;
-            return "Chips: " + chips.getChipFlavor();
+            return "Chips: " + chips.getChipFlavor() + "Chip Cost: " + chips.getPrice();
         }else {
             return "Unknown item";
         }

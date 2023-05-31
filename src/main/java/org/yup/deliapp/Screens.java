@@ -1,5 +1,6 @@
 package org.yup.deliapp;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -33,10 +34,13 @@ public class Screens {
 
         switch (orderScreenChoice.toLowerCase()){
             case "s":
+                sandwichOrder();
                 break;
+
             case "c":
                 chipOrder();
                 break;
+
             case "d":
                 drinkOrder();
                 break;
@@ -121,12 +125,38 @@ public class Screens {
 
     }
 
+    public static void sandwichOrder(){
+        System.out.println("Please choose the SIZE of your sandwich: ");
+        System.out.println("Please choose the type of BREAD: ");
+        System.out.println("Did you want your bread TOASTED? (Y/N)");
+        System.out.println("Please choose which MEAT: ");
+        System.out.println("Please choose which CHEESE: ");
+        System.out.println("Please choose which FREE TOPPING: ");
+
+    }
+
     public static void viewOrder(){
+        OrderManager.readOrder();
         System.out.println("Please choose from the following options: ");
         System.out.println("P * to CHECKOUT and PAY");
         System.out.println("A * to ADD to your order");
         System.out.println("R * to REMOVE item from your order");
         System.out.println("X * to CANCEL your order");
+        String viewOrderChoice = userScanner.nextLine();
+
+        switch (viewOrderChoice.toLowerCase()){
+            case "p":
+                break;
+
+            case "a":
+                break;
+
+            case "r":
+                break;
+
+            case "x":
+                break;
+        }
 
     }
 
