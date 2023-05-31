@@ -57,4 +57,28 @@ public class Sandwich extends OrderItem {
 
         return price;
     }
+
+    public SandwichSize getSize() {
+        return size;
+    }
+
+    public boolean isToasted() {
+        return isToasted;
+    }
+
+    public BreadType getBreadType() {
+        return breadType;
+    }
+
+    public ArrayList<MeatType> getMeats() {
+        return meats;
+    }
+
+    public ArrayList<CheeseType> getCheeses() {
+        return cheeses;
+    }
+
+    public ArrayList<FreeTopping> getFreeToppings() {
+        return freeToppings;
+    }
 }
