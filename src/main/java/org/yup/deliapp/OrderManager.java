@@ -8,7 +8,7 @@ public class OrderManager {
 
     //Where the reader and writer are
     private static int orderCounter;
-    private static final String ORDERS_DIRECTORY = "orders/";
+    private static final String ordersDirectory = "orders/";
 
     public OrderManager() {
         orderCounter = readOrderCounter();
@@ -51,16 +51,16 @@ public class OrderManager {
         }
     }
 
-    public static int readOrderCounter() {
+    private static int readOrderCounter() {
         try (BufferedReader reader = new BufferedReader(new FileReader("order_counter.txt"))) {
-            String receiptLine = reader.readLine();
-            return Integer.parseInt(receiptLine);
+            String numberLine = reader.readLine();
+            return Integer.parseInt(numberLine);
         } catch (IOException | NumberFormatException e) {
             return 0; // Default value if file not found or invalid value
         }
     }
 
-    public static void writeOrderCounter() {
+    private static void writeOrderCounter() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("order_counter.txt"))) {
             writer.write(Integer.toString(orderCounter));
         } catch (IOException e) {
@@ -68,23 +68,27 @@ public class OrderManager {
         }
     }
 
-    public static int incrementOrderCounter() {
+    private static int incrementOrderCounter() {
         orderCounter++;
         return orderCounter;
     }
 
-    public static String generateFileName(int orderNumber) {
+    private static String generateFileName(int orderNumber) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter receiptFormat = DateTimeFormatter.ofPattern("yyyy.MM.dd_hh:mm:ss");
         String receiptDateTime = currentDateTime.format(receiptFormat);
 
-        return ORDERS_DIRECTORY + receiptDateTime + "_OrderNo.:" + orderNumber + ".txt";
+        return ordersDirectory + receiptDateTime + "_OrderNo.:" + orderNumber + ".txt";
 
     }
 
-    public static String orderToString(Order order) {
+    private static String orderToString(Order order) {
         String orderStringFormat = String.format("");
         return orderStringFormat;
+    }
+
+    private static String itemToString(OrderItem item) {
+        return "";
     }
 
     public static void stringToOrder(String orderStringFormat){

@@ -14,4 +14,20 @@ public class Order {
         this.orderNumber = orderNumber;
         this.orderItems = orderItems;
     }
+
+    public int getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(int orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
+    public ArrayList<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(ArrayList<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
 }
