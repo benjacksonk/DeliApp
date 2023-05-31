@@ -1,13 +1,13 @@
 package org.yup.deliapp;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-//DO NOT TOUCH
 public class Screens {
 
     static Scanner userScanner = new Scanner(System.in); //static scanner - will be able to use it throughout the class
-    static ArrayList<OrderItem> orderList = new ArrayList<>();
+    static ArrayList<OrderItem> orderList = new ArrayList<OrderItem>();
 
     public static String homeScreen(){
         //the main screen or main menu
@@ -34,10 +34,13 @@ public class Screens {
 
         switch (orderScreenChoice.toLowerCase()){
             case "s":
+                sandwichOrder();
                 break;
+
             case "c":
                 chipOrder();
                 break;
+
             case "d":
                 drinkOrder();
                 break;
@@ -109,15 +112,51 @@ public class Screens {
         String chipFlavor = userScanner.nextLine().toUpperCase();
 
         try {
+
             Chips.chipOptions selectedChip = Chips.chipOptions.valueOf(chipFlavor);
+            Chips chipOrder = new Chips(selectedChip);
+            orderList.add(chipOrder);
+
 
         }catch(IllegalArgumentException e){
             System.out.println("Invalid chip choice. Please try again");
+            chipOrder();
         }
 
     }
 
+    public static void sandwichOrder(){
+        System.out.println("Please choose the SIZE of your sandwich: ");
+        System.out.println("Please choose the type of BREAD: ");
+        System.out.println("Did you want your bread TOASTED? (Y/N)");
+        System.out.println("Please choose which MEAT: ");
+        System.out.println("Please choose which CHEESE: ");
+        System.out.println("Please choose which FREE TOPPING: ");
+
+    }
+
     public static void viewOrder(){
+        OrderManager.readOrder();
+        System.out.println("Please choose from the following options: ");
+        System.out.println("P * to CHECKOUT and PAY");
+        System.out.println("A * to ADD to your order");
+        System.out.println("R * to REMOVE item from your order");
+        System.out.println("X * to CANCEL your order");
+        String viewOrderChoice = userScanner.nextLine();
+
+        switch (viewOrderChoice.toLowerCase()){
+            case "p":
+                break;
+
+            case "a":
+                break;
+
+            case "r":
+                break;
+
+            case "x":
+                break;
+        }
 
     }
 

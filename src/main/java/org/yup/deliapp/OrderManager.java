@@ -3,20 +3,18 @@ package org.yup.deliapp;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class OrderManager {
 
     //Where the reader and writer are
-    private static int orderCounter;
-    private static final String ORDERS_DIRECTORY = "orders/";
-
-    public OrderManager() {
-        orderCounter = readOrderCounter();
-    }
+    private static final String ordersDirectory = "orders/";
 
     public static void writeOrder(Order order) {
-        int currentOrderNumber = incrementOrderCounter();
-        String fileName = generateFileName(currentOrderNumber);
+
+        UUID orderID = UUID.randomUUID();
+        String fileName = generateFileName(orderID);
 
         try {
             FileWriter receipt = new FileWriter(fileName);
@@ -27,13 +25,12 @@ public class OrderManager {
             System.out.println("ERROR: Could not write receipt.");
             e.printStackTrace();
         }
-
-        writeOrderCounter();
     }
 
-    public static void readOrder(int orderNumber) {
+    public static void readOrder() {
 
-        String fileName = generateFileName(orderNumber);
+        UUID currentOrderID = UUID.randomUUID();
+        String fileName = generateFileName(currentOrderID);
 
         try {
             FileReader receipt2 = new FileReader(fileName);
@@ -51,40 +48,42 @@ public class OrderManager {
         }
     }
 
-    public static int readOrderCounter() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("order_counter.txt"))) {
-            String receiptLine = reader.readLine();
-            return Integer.parseInt(receiptLine);
-        } catch (IOException | NumberFormatException e) {
-            return 0; // Default value if file not found or invalid value
-        }
-    }
-
-    public static void writeOrderCounter() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("order_counter.txt"))) {
-            writer.write(Integer.toString(orderCounter));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static int incrementOrderCounter() {
-        orderCounter++;
-        return orderCounter;
-    }
-
-    public static String generateFileName(int orderNumber) {
+    private static String generateFileName(UUID orderID) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter receiptFormat = DateTimeFormatter.ofPattern("yyyy.MM.dd_hh:mm:ss");
         String receiptDateTime = currentDateTime.format(receiptFormat);
 
-        return ORDERS_DIRECTORY + receiptDateTime + "_OrderNo.:" + orderNumber + ".txt";
+        return ordersDirectory + receiptDateTime + "_OrderID:" + orderID.toString() + ".txt";
 
     }
 
-    public static String orderToString(Order order) {
-        String orderStringFormat = String.format("");
-        return orderStringFormat;
+    private static String orderToString(Order order) {
+        StringBuilder receiptBuilder = new StringBuilder();
+        receiptBuilder.append("Order Number: ").append(order.getOrderNumber()).append("\n");
+
+        ArrayList<OrderItem> orderItems = order.getOrderItems();
+        for (OrderItem item : orderItems) {
+            receiptBuilder.append(itemToString(item)).append("\n");
+        }
+
+        return receiptBuilder.toString();
+    }
+
+    private static String itemToString(OrderItem item) {
+        if (item instanceof Sandwich) {
+            Sandwich sandwich = (Sandwich) item;
+            return "Sandwich: " + sandwich.getBreadType() + sandwich.getCheeses() + sandwich.getMeats()
+                    + sandwich.getFreeToppings() + sandwich.getSize() + "\n" +
+                    "Sandwich Total Cost: " + sandwich.getPrice();
+        }else if (item instanceof Drinks) {
+            Drinks drink = (Drinks) item;
+            return "Drink: " + drink.getFlavor() + "Drink Cost: " + drink.getPrice();
+        }else if (item instanceof Chips) {
+            Chips chips = (Chips) item;
+            return "Chips: " + chips.getChipFlavor() + "Chip Cost: " + chips.getPrice();
+        }else {
+            return "Unknown item";
+        }
     }
 
     public static void stringToOrder(String orderStringFormat){

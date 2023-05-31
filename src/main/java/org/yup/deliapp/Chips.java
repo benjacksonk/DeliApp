@@ -2,12 +2,15 @@ package org.yup.deliapp;
 
 public class Chips extends OrderItem {
     private final double price = 1.50;
+    private chipOptions chipFlavor;
 
+    public Chips(chipOptions chipFlavor) {
+        this.chipFlavor = chipFlavor;
+    }
 
     public double getPrice() {
         return price;
     }
-
 
     public enum chipOptions {
         ORIGINAL_LAYS,
@@ -20,5 +23,7 @@ public class Chips extends OrderItem {
         TOSTITOS
     }
 
-
+    public chipOptions getChipFlavor() {
+        return chipFlavor;
+    }
 }
