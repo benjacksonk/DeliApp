@@ -36,13 +36,16 @@ public class Screens {
             case "s":
                 break;
             case "c":
+                chipOrder();
                 break;
             case "d":
                 drinkOrder();
                 break;
 
             case "v":
+                viewOrder();
                 break;
+
             case "x":
                 cancelOrder();
                 break;
@@ -93,6 +96,28 @@ public class Screens {
             System.out.println("Invalid flavor choice. Please try again.");
             drinkOrder();
         }
+
+    }
+
+    public static void chipOrder(){
+        System.out.println("Please choose from the following: ");
+        for (Chips.chipOptions chipFlavors : Chips.chipOptions.values()) {
+            System.out.println("\t" + chipFlavors);
+        }
+
+        System.out.println("Please ENTER your selection: ");
+        String chipFlavor = userScanner.nextLine().toUpperCase();
+
+        try {
+            Chips.chipOptions selectedChip = Chips.chipOptions.valueOf(chipFlavor);
+
+        }catch(IllegalArgumentException e){
+            System.out.println("Invalid chip choice. Please try again");
+        }
+
+    }
+
+    public static void viewOrder(){
 
     }
 
