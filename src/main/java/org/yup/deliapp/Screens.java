@@ -7,7 +7,8 @@ import java.util.Scanner;
 public class Screens {
 
     static Scanner userScanner = new Scanner(System.in); //static scanner - will be able to use it throughout the class
-    static ArrayList<OrderItem> orderList = new ArrayList<OrderItem>();
+//    static ArrayList<OrderItem> orderList = new ArrayList<OrderItem>();
+    static Order currentOrder;
 
     public static String homeScreen(){
         //the main screen or main menu
@@ -63,7 +64,7 @@ public class Screens {
     }
 
     public static void cancelOrder(){
-        orderList.clear();
+        currentOrder = null;
         System.out.println("Your order has been successfully CANCELED");
         homeScreen();
 
@@ -72,7 +73,7 @@ public class Screens {
     public static void drinkOrder(){
         System.out.println("Please choose from the following FLAVORS: ");
 
-        for ( DrinkFlavor drinkFlavor : DrinkFlavor.values()) {
+        for (DrinkFlavor drinkFlavor : DrinkFlavor.values()) {
             System.out.println("\t"+drinkFlavor);
         }
 
@@ -87,7 +88,7 @@ public class Screens {
 
             if (selectedSize.equals("SMALL") || selectedSize.equals("MEDIUM") || selectedSize.equals("LARGE")) {
                 Drinks drinkChoice = new Drinks(selectedSize, selectedFlavor);
-                orderList.add(drinkChoice);
+                currentOrder.getOrderItems().add(drinkChoice);
 
 
             } else {
@@ -115,7 +116,7 @@ public class Screens {
 
             Chips.chipOptions selectedChip = Chips.chipOptions.valueOf(chipFlavor);
             Chips chipOrder = new Chips(selectedChip);
-            orderList.add(chipOrder);
+            currentOrder.getOrderItems().add(chipOrder);
 
 
         }catch(IllegalArgumentException e){
@@ -126,16 +127,57 @@ public class Screens {
     }
 
     public static void sandwichOrder(){
-        System.out.println("Please choose the SIZE of your sandwich: ");
+        System.out.println("Please enter the SIZE of your sandwich: ");
+        for (SandwichSize sandwichSize : SandwichSize.values()){
+            System.out.println(sandwichSize);
+        }
+
+        SandwichSize selectedSize = SandwichSize.valueOf(userScanner.nextLine().toUpperCase());
+
         System.out.println("Please choose the type of BREAD: ");
+        for (BreadType breadType : BreadType.values()) {
+            System.out.println(breadType);
+        }
+
+        BreadType selectedBread = BreadType.valueOf(userScanner.nextLine().toUpperCase());
+
         System.out.println("Did you want your bread TOASTED? (Y/N)");
+        String toastedInput = userScanner.nextLine();
+        boolean isToasted = toastedInput.equalsIgnoreCase("y");
+
         System.out.println("Please choose which MEAT: ");
+        for (MeatType meatType : MeatType.values()) {
+            System.out.println(meatType);
+        }
+
+        String selectedMeat = userScanner.nextLine();
+
         System.out.println("Please choose which CHEESE: ");
+        for (CheeseType cheeseType : CheeseType.values()) {
+            System.out.println(cheeseType);
+        }
+
+        String selectedCheese = userScanner.nextLine();
+
         System.out.println("Please choose which FREE TOPPING: ");
+        for (FreeTopping freeTopping : FreeTopping.values()) {
+            System.out.println(freeTopping);
+        }
+
+        String selectedTopping = userScanner.nextLine();
 
     }
 
     public static void viewOrder(){
+        if (currentOrder == null || currentOrder.getOrderItems().isEmpty()) {
+            System.out.println("Your cart is empty.");
+        }else{
+            System.out.println("Your order contains the following items: ");
+
+            for (OrderItem orderItems : currentOrder.getOrderItems()) {
+                System.out.println(orderItems.toString());
+            }
+        }
         OrderManager.readOrder();
         System.out.println("Please choose from the following options: ");
         System.out.println("P * to CHECKOUT and PAY");
@@ -146,9 +188,14 @@ public class Screens {
 
         switch (viewOrderChoice.toLowerCase()){
             case "p":
+                OrderManager.readOrder();
+                System.out.println("Please enter cash AMOUNT: ");
+                double userAmount = userScanner.nextDouble();
+                System.out.println();
                 break;
 
             case "a":
+                orderScreen();
                 break;
 
             case "r":

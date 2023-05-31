@@ -20,6 +20,8 @@ public class OrderManager {
             FileWriter receipt = new FileWriter(fileName);
             BufferedWriter receiptWriter = new BufferedWriter(receipt);
             receiptWriter.write(orderToString(order));
+            receiptWriter.close();
+            System.out.println("Order written to receipt: " + fileName);
 
         } catch (IOException e) {
             System.out.println("ERROR: Could not write receipt.");
