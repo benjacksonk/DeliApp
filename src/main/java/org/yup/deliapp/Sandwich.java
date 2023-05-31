@@ -6,8 +6,8 @@ public class Sandwich extends OrderItem {
     private SandwichSize size;
     private boolean isToasted;
     private BreadType breadType;
-    private ArrayList<MeatType> meats;
-    private ArrayList<CheeseType> cheeses;
+    private ArrayList<Meat> meats;
+    private ArrayList<Cheese> cheeses;
     private ArrayList<FreeTopping> freeToppings;
 
     public Sandwich(SandwichSize size, boolean isToasted, BreadType breadType) {
@@ -15,17 +15,19 @@ public class Sandwich extends OrderItem {
         this.isToasted = isToasted;
         this.breadType = breadType;
 
-        meats = new ArrayList<MeatType>();
-        cheeses = new ArrayList<CheeseType>();
+        meats = new ArrayList<Meat>();
+        cheeses = new ArrayList<Cheese>();
         freeToppings = new ArrayList<FreeTopping>();
     }
 
-    public void addMeat(MeatType meatType) {
-        meats.add(meatType);
+    public void addMeat(MeatType meatType, boolean extra) {
+        Meat meat = new Meat(meatType, extra, size);
+        meats.add(meat);
     }
 
-    public void addCheese(CheeseType cheeseType) {
-        cheeses.add(cheeseType);
+    public void addCheese(CheeseType cheeseType, boolean extra) {
+        Cheese cheese = new Cheese(cheeseType, extra, size);
+        cheeses.add(cheese);
     }
 
     public void addFreeTopping(FreeTopping topping) {
@@ -33,29 +35,26 @@ public class Sandwich extends OrderItem {
     }
 
     public double getPrice() {
-        double price;
+        double basePrice;
 
         switch (size) {
             case FOUR_INCHES:
-                price = 5.50;
-                price += 1.00 * meats.size();
-                price += 0.75 * cheeses.size();
+                basePrice = 5.50;
                 break;
             case EIGHT_INCHES:
-                price = 7.00;
-                price += 2.00 * meats.size();
-                price += 1.50 * cheeses.size();
+                basePrice = 7.00;
                 break;
             case TWELVE_INCHES:
-                price = 8.50;
-                price += 3.00 * meats.size();
-                price += 2.25 * cheeses.size();
+                basePrice = 8.50;
                 break;
             default:
-                price = 0;
+                basePrice = 0;
         }
 
-        return price;
+        double meatsSubtotal = meats.stream().mapToDouble(Meat::getPrice).sum();
+        double cheesesSubtotal = cheeses.stream().mapToDouble(Cheese::getPrice).sum();
+
+        return basePrice + meatsSubtotal + cheesesSubtotal;
     }
 
     public SandwichSize getSize() {
@@ -70,11 +69,11 @@ public class Sandwich extends OrderItem {
         return breadType;
     }
 
-    public ArrayList<MeatType> getMeats() {
+    public ArrayList<Meat> getMeats() {
         return meats;
     }
 
-    public ArrayList<CheeseType> getCheeses() {
+    public ArrayList<Cheese> getCheeses() {
         return cheeses;
     }
 

@@ -1,12 +1,12 @@
 package org.yup.deliapp;
 
-public class Meat extends PremiumToppings {
-    private MeatType meatType;
+public class Cheese extends PremiumToppings {
+    private CheeseType cheeseType;
     private SandwichSize size;
 
-    public Meat(MeatType meatType, boolean hasExtra, SandwichSize size) {
+    public Cheese(CheeseType cheeseType, boolean hasExtra, SandwichSize size) {
         super(hasExtra);
-        this.meatType = meatType;
+        this.cheeseType = cheeseType;
         this.size = size;
     }
 
@@ -17,16 +17,16 @@ public class Meat extends PremiumToppings {
 
         switch (size) {
             case FOUR_INCHES:
-                regularPrice = 1.00;
-                extraPrice = 0.50;
+                regularPrice = 0.75;
+                extraPrice = 0.30;
                 break;
             case EIGHT_INCHES:
-                regularPrice = 2.00;
-                extraPrice = 1.00;
+                regularPrice = 1.50;
+                extraPrice = 0.60;
                 break;
             case TWELVE_INCHES:
-                regularPrice = 3.00;
-                extraPrice = 1.50;
+                regularPrice = 2.25;
+                extraPrice = 0.90;
                 break;
             default:
                 // Handle invalid sub sizes or additional logic if needed
