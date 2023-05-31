@@ -20,6 +20,16 @@ public class Sandwich extends OrderItem {
         freeToppings = new ArrayList<FreeTopping>();
     }
 
+    public Sandwich(SandwichSize size, boolean isToasted, BreadType breadType, ArrayList<Meat> meats,
+                    ArrayList<Cheese> cheeses, ArrayList<FreeTopping> freeToppings) {
+        this.size = size;
+        this.isToasted = isToasted;
+        this.breadType = breadType;
+        this.meats = meats;
+        this.cheeses = cheeses;
+        this.freeToppings = freeToppings;
+    }
+
     public void addMeat(MeatType meatType, boolean extra) {
         Meat meat = new Meat(meatType, extra, size);
         meats.add(meat);
