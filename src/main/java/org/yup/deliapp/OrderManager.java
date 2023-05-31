@@ -3,20 +3,18 @@ package org.yup.deliapp;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class OrderManager {
 
     //Where the reader and writer are
-    private static int orderCounter;
     private static final String ordersDirectory = "orders/";
 
-    public OrderManager() {
-        orderCounter = readOrderCounter();
-    }
-
     public static void writeOrder(Order order) {
-        int currentOrderNumber = incrementOrderCounter();
-        String fileName = generateFileName(currentOrderNumber);
+
+        UUID orderID = UUID.randomUUID();
+        String fileName = generateFileName(orderID);
 
         try {
             FileWriter receipt = new FileWriter(fileName);
@@ -27,13 +25,12 @@ public class OrderManager {
             System.out.println("ERROR: Could not write receipt.");
             e.printStackTrace();
         }
-
-        writeOrderCounter();
     }
 
-    public static void readOrder(int orderNumber) {
+    public static void readOrder() {
 
-        String fileName = generateFileName(orderNumber);
+        UUID currentOrderID = UUID.randomUUID();
+        String fileName = generateFileName(currentOrderID);
 
         try {
             FileReader receipt2 = new FileReader(fileName);
@@ -60,35 +57,40 @@ public class OrderManager {
         }
     }
 
-    private static void writeOrderCounter() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("order_counter.txt"))) {
-            writer.write(Integer.toString(orderCounter));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static int incrementOrderCounter() {
-        orderCounter++;
-        return orderCounter;
-    }
-
-    private static String generateFileName(int orderNumber) {
+    private static String generateFileName(UUID orderID) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter receiptFormat = DateTimeFormatter.ofPattern("yyyy.MM.dd_hh:mm:ss");
         String receiptDateTime = currentDateTime.format(receiptFormat);
 
-        return ordersDirectory + receiptDateTime + "_OrderNo.:" + orderNumber + ".txt";
+        return ordersDirectory + receiptDateTime + "_OrderID.:" + orderID.toString() + ".txt";
 
     }
 
     private static String orderToString(Order order) {
-        String orderStringFormat = String.format("");
-        return orderStringFormat;
+        StringBuilder receiptBuilder = new StringBuilder();
+        receiptBuilder.append("Order Number: ").append(order.getOrderNumber()).append("\n");
+
+        ArrayList<OrderItem> orderItems = order.getOrderItems();
+        for (OrderItem item : orderItems) {
+            receiptBuilder.append(itemToString(item)).append("\n");
+        }
+
+        return receiptBuilder.toString();
     }
 
     private static String itemToString(OrderItem item) {
-        return "";
+        if (item instanceof Sandwich) {
+            Sandwich sandwich = (Sandwich) item;
+            return "Sandwich: ";
+        }else if (item instanceof Drinks) {
+            Drinks drink = (Drinks) item;
+            return "Drink: " + drink.getFlavor();
+        }else if (item instanceof Chips) {
+            Chips chips = (Chips) item;
+            return "Chips: " + chips.getChipFlavor();
+        }else {
+            return "Unknown item";
+        }
     }
 
     public static void stringToOrder(String orderStringFormat){

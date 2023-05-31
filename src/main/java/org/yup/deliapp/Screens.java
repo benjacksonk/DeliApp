@@ -3,11 +3,10 @@ package org.yup.deliapp;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-//DO NOT TOUCH
 public class Screens {
 
     static Scanner userScanner = new Scanner(System.in); //static scanner - will be able to use it throughout the class
-    static ArrayList<OrderItem> orderList = new ArrayList<>();
+    static ArrayList<OrderItem> orderList = new ArrayList<OrderItem>();
 
     public static String homeScreen(){
         //the main screen or main menu
@@ -109,15 +108,25 @@ public class Screens {
         String chipFlavor = userScanner.nextLine().toUpperCase();
 
         try {
+
             Chips.chipOptions selectedChip = Chips.chipOptions.valueOf(chipFlavor);
+            Chips chipOrder = new Chips(selectedChip);
+            orderList.add(chipOrder);
+
 
         }catch(IllegalArgumentException e){
             System.out.println("Invalid chip choice. Please try again");
+            chipOrder();
         }
 
     }
 
     public static void viewOrder(){
+        System.out.println("Please choose from the following options: ");
+        System.out.println("P * to CHECKOUT and PAY");
+        System.out.println("A * to ADD to your order");
+        System.out.println("R * to REMOVE item from your order");
+        System.out.println("X * to CANCEL your order");
 
     }
 
