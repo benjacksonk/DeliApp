@@ -30,4 +30,18 @@ public class Order {
     public void setOrderItems(ArrayList<OrderItem> orderItems) {
         this.orderItems = orderItems;
     }
+
+    public double calculateTotalCost() {
+        double totalCost = 0;
+
+        for (OrderItem orderItem : orderItems){
+            totalCost += orderItem.getPrice();
+        }
+
+        return  totalCost;
+    }
+
+    public void removeItem(OrderItem item) {
+        orderItems.remove(item);
+    }
 }
