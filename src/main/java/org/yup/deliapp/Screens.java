@@ -2,6 +2,8 @@ package org.yup.deliapp;
 
 import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 public class Screens {
@@ -126,10 +128,10 @@ public class Screens {
 
     }
 
-    public static void sandwichOrder(){
+    public static void sandwichOrder() {
         System.out.println("Please enter the SIZE of your sandwich: ");
-        for (SandwichSize sandwichSize : SandwichSize.values()){
-            System.out.println(sandwichSize);
+        for (SandwichSize sandwichSize : SandwichSize.values()) {
+            System.out.println(sandwichSize.getValue() + " = " + sandwichSize);
         }
 
         SandwichSize selectedSize = SandwichSize.valueOf(userScanner.nextLine().toUpperCase());
@@ -150,22 +152,77 @@ public class Screens {
             System.out.println(meatType);
         }
 
-        String selectedMeat = userScanner.nextLine();
+        String meatInput = userScanner.nextLine();
+        ArrayList<MeatType> selectedMeats = new ArrayList<>();
+        if (!meatInput.isEmpty()) {
+            String[] meatTypes = meatInput.split(",");
+            for (String meat : meatTypes) {
+                try {
+                    MeatType selectedMeat = MeatType.valueOf(meat.trim().toUpperCase());
+                    selectedMeats.add(selectedMeat);
+                }catch(IllegalArgumentException e){
+                    System.out.println("Invalid meat type: " + meat);
+                }
+            }
+        }
 
-        System.out.println("Please choose which CHEESE: ");
+        System.out.println("Please choose which CHEESE: (separated by commas(,)) ");
         for (CheeseType cheeseType : CheeseType.values()) {
             System.out.println(cheeseType);
         }
+        String cheeseInput = userScanner.nextLine();
+        ArrayList<CheeseType> selectedCheeseTypes = new ArrayList<>();
+        if (!cheeseInput.isEmpty()) {
+            String[] cheeseTypes = cheeseInput.split(",");
+            for (String cheese : cheeseTypes){
+                try {
+                    CheeseType selectedCheeseType = CheeseType.valueOf(cheese.trim().toUpperCase());
+                    selectedCheeseTypes.add(selectedCheeseType);
+                }catch (IllegalArgumentException e) {
+                    System.out.println("Invalid cheese type: " + cheese);
+                }
+            }
+        }
 
-        String selectedCheese = userScanner.nextLine();
-
-        System.out.println("Please choose which FREE TOPPING: ");
+        System.out.println("Please choose which FREE TOPPING (please separate by commas(,)) or press ENTER to skip: ");
         for (FreeTopping freeTopping : FreeTopping.values()) {
             System.out.println(freeTopping);
         }
 
-        String selectedTopping = userScanner.nextLine();
+        String toppingsInput = userScanner.nextLine();
+        ArrayList<FreeTopping> selectedToppings = new ArrayList<>();
+        if (toppingsInput.isEmpty()) {
+            String[] toppingTypes = toppingsInput.split(",");
+                for (String topping : toppingTypes) {
+                    try{
+                        FreeTopping selectedTopping = FreeTopping.valueOf(topping.trim().toUpperCase());
+                        selectedToppings.add(selectedTopping);
+                    }catch (IllegalArgumentException e) {
+                        System.out.println("Invalid topping: " + topping);
+                    }
+                }
+            }
 
+            Sandwich customSandwich = new Sandwich(selectedSize, isToasted, selectedBread);
+
+        for (MeatType meatType : selectedMeats) {
+            customSandwich.addMeat(meatType, false);
+        }
+
+        for (CheeseType cheeseType : selectedCheeseTypes) {
+            customSandwich.addCheese(cheeseType, false);
+        }
+
+        for (FreeTopping topping : selectedToppings){
+            customSandwich.addFreeTopping(topping);
+        }
+
+        if (currentOrder != null) {
+            currentOrder.getOrderItems().add(customSandwich);
+            System.out.println("Custom sandwich added to your order.");
+        } else {
+            System.out.println("ERROR");
+        }
     }
 
     public static void viewOrder(){
@@ -191,7 +248,18 @@ public class Screens {
                 OrderManager.readOrder();
                 System.out.println("Please enter cash AMOUNT: ");
                 double userAmount = userScanner.nextDouble();
-                System.out.println();
+
+                double totalCost = currentOrder.calculateTotalCost();
+
+                if (userAmount >= totalCost) {
+                    System.out.println("Payment successful. Your order has been placed");
+
+                    OrderManager.writeOrder(currentOrder);
+
+                    currentOrder = null;
+                } else {
+                    System.out.println("Insufficient payment amount. Please try again.");
+                }
                 break;
 
             case "a":
@@ -199,9 +267,28 @@ public class Screens {
                 break;
 
             case "r":
+                System.out.println("Enter the index of the item to remove: ");
+                //I have to figure out how to make it so that the user does not input the index of the AL
+//                String itemIndex = userScanner.nextLine();
+//                userScanner.nextLine();
+//                currentOrder.removeItem();
                 break;
 
             case "x":
+                System.out.println("Are you sure you want to cancel your order? (Y?N)");
+                String cancelConfirmation = userScanner.nextLine();
+
+                if (cancelConfirmation.equalsIgnoreCase("y")) {
+                    System.out.println("Order canceled.Your cart has been cleared.");
+                    currentOrder = null;
+                    homeScreen();
+                }else{
+                    System.out.println("Order cancellation aborted.");
+                }
+                break;
+
+            default:
+                System.out.println("Invalid option. Please try again.");
                 break;
         }
 
