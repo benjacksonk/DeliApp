@@ -1,16 +1,13 @@
 package org.yup.deliapp;
 
-import java.sql.SQLOutput;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Screens {
 
     static Scanner userScanner = new Scanner(System.in); //static scanner - will be able to use it throughout the class
-//    static ArrayList<OrderItem> orderList = new ArrayList<OrderItem>();
-    static Order currentOrder;
+    static ArrayList<OrderItem> orderList = new ArrayList<OrderItem>();
+    static UUID orderNumber = UUID.randomUUID();
+    static Order currentOrder = new Order(orderNumber, orderList);
 
     public static String homeScreen(){
         //the main screen or main menu
@@ -62,6 +59,8 @@ public class Screens {
                 break;
         }
 
+        orderScreen();
+
         return "";
     }
 
@@ -76,30 +75,46 @@ public class Screens {
         System.out.println("Please choose from the following FLAVORS: ");
 
         for (DrinkFlavor drinkFlavor : DrinkFlavor.values()) {
-            System.out.println("\t"+drinkFlavor);
+            System.out.println("\t"+drinkFlavor.getValue() + " * " + drinkFlavor);
         }
 
-        System.out.print("Please ENTER your selection: ");
-        String flavorInput = userScanner.nextLine().toUpperCase();
+        System.out.print("Please enter your NUMBER selection: ");
+
+        int flavorInput = userScanner.nextInt();
+        userScanner.nextLine();
 
         try {
-            DrinkFlavor selectedFlavor = DrinkFlavor.valueOf(flavorInput);
+            DrinkFlavor selectedFlavor = null;
+            for (DrinkFlavor drinkFlavor : DrinkFlavor.values()){
+                if (drinkFlavor.getValue() == flavorInput) {
+                    selectedFlavor = drinkFlavor;
+                    break;
+                }
+            }
 
-            System.out.println("Please select SIZE (SMALL, MEDIUM, LARGE): ");
-            String selectedSize = userScanner.nextLine().toUpperCase();
+            if (selectedFlavor != null) {
 
-            if (selectedSize.equals("SMALL") || selectedSize.equals("MEDIUM") || selectedSize.equals("LARGE")) {
-                Drinks drinkChoice = new Drinks(selectedSize, selectedFlavor);
-                currentOrder.getOrderItems().add(drinkChoice);
+                System.out.print("Please select SIZE (SMALL, MEDIUM, LARGE): ");
+                String selectedSize = userScanner.nextLine().toUpperCase();
 
+                if (selectedSize.equals("SMALL") || selectedSize.equals("MEDIUM") || selectedSize.equals("LARGE")) {
+                    Drinks drinkChoice = new Drinks(selectedSize, selectedFlavor);
+                    currentOrder.getOrderItems().add(drinkChoice);
+                    System.out.printf("%s %s: $%.2f successfully added to your order.\n" + "\n",
+                            drinkChoice.getSize(), drinkChoice.getFlavor(), drinkChoice.getPrice());
+
+                }else{
+                    System.out.println("Invalid size choice. Please try again.");
+                    drinkOrder();
+                }
 
             } else {
-                System.out.println("Invalid size choice. Please try again.");
+                System.out.println("Invalid choice choice. Please try again.");
                 drinkOrder();
             }
 
         }catch(IllegalArgumentException e){
-            System.out.println("Invalid flavor choice. Please try again.");
+            System.out.println("Invalid choice. Please try again.");
             drinkOrder();
         }
 
@@ -108,18 +123,34 @@ public class Screens {
     public static void chipOrder(){
         System.out.println("Please choose from the following: ");
         for (Chips.chipOptions chipFlavors : Chips.chipOptions.values()) {
-            System.out.println("\t" + chipFlavors);
+            System.out.println("\t" + chipFlavors.getValue() + " * " + chipFlavors);
         }
 
-        System.out.println("Please ENTER your selection: ");
-        String chipFlavor = userScanner.nextLine().toUpperCase();
+        System.out.print("Please ENTER your NUMBER selection: ");
+        int chipInput = userScanner.nextInt();
+        userScanner.nextLine();
 
         try {
 
-            Chips.chipOptions selectedChip = Chips.chipOptions.valueOf(chipFlavor);
-            Chips chipOrder = new Chips(selectedChip);
-            currentOrder.getOrderItems().add(chipOrder);
+            Chips.chipOptions selectedChip = null;
 
+            for(Chips.chipOptions chipFlavor : Chips.chipOptions.values()){
+                if (chipFlavor.getValue() == chipInput) {
+                    selectedChip = chipFlavor;
+                    break;
+                }
+            }
+
+            if (selectedChip != null) {
+                Chips chipOrder = new Chips(selectedChip);
+                currentOrder.getOrderItems().add(chipOrder);
+                System.out.printf("%s: $%.2f successfully added to your order.\n" + "\n",
+                        chipOrder.getChipFlavor(), chipOrder.getPrice());
+
+            }else {
+                System.out.println("Invalid chip choice. Please try again");
+                chipOrder();
+            }
 
         }catch(IllegalArgumentException e){
             System.out.println("Invalid chip choice. Please try again");
@@ -129,113 +160,185 @@ public class Screens {
     }
 
     public static void sandwichOrder() {
-        System.out.println("Please enter the SIZE of your sandwich: ");
+
+        System.out.println("Please enter the NUMBER of the SIZE of your sandwich: ");
         for (SandwichSize sandwichSize : SandwichSize.values()) {
-            System.out.println(sandwichSize.getValue() + " = " + sandwichSize);
+            System.out.println("\t" + sandwichSize.getValue() + " * " + sandwichSize);
         }
 
-        SandwichSize selectedSize = SandwichSize.valueOf(userScanner.nextLine().toUpperCase());
+        int userSizeInput = userScanner.nextInt();
+        userScanner.nextLine();
 
-        System.out.println("Please choose the type of BREAD: ");
+        SandwichSize selectedSize = null;
+
+        for (SandwichSize sandwichSize : SandwichSize.values()) {
+            if (sandwichSize.getValue() == userSizeInput) {
+                selectedSize = sandwichSize;
+                break;
+
+            }
+            if (selectedSize == null) {
+                System.out.println("Invalid Input.");
+            }
+        }
+
+        System.out.println("Please enter the NUMBER of the type of BREAD: ");
         for (BreadType breadType : BreadType.values()) {
-            System.out.println(breadType);
+            System.out.println("\t" + breadType.getValue() + " * " + breadType);
         }
 
-        BreadType selectedBread = BreadType.valueOf(userScanner.nextLine().toUpperCase());
+        int userBreadInput = userScanner.nextInt();
+        userScanner.nextLine();
+
+        BreadType selectedBread = null;
+
+        for (BreadType breadType : BreadType.values()) {
+            if (breadType.getValue() == userBreadInput) {
+                selectedBread = breadType;
+                break;
+
+            }
+        }
+        if (selectedBread == null) {
+            System.out.println("Invalid Input.");
+        }
 
         System.out.println("Did you want your bread TOASTED? (Y/N)");
         String toastedInput = userScanner.nextLine();
         boolean isToasted = toastedInput.equalsIgnoreCase("y");
 
-        System.out.println("Please choose which MEAT: ");
+        System.out.println("Please enter the NUMBER of the MEAT/s you want added: ");
         for (MeatType meatType : MeatType.values()) {
-            System.out.println(meatType);
+            System.out.println("\t" + meatType.getValue() + " * " + meatType);
         }
 
         String meatInput = userScanner.nextLine();
+        String[] meatNumbers = meatInput.split(" ");
         ArrayList<MeatType> selectedMeats = new ArrayList<>();
-        if (!meatInput.isEmpty()) {
-            String[] meatTypes = meatInput.split(",");
-            for (String meat : meatTypes) {
-                try {
-                    MeatType selectedMeat = MeatType.valueOf(meat.trim().toUpperCase());
-                    selectedMeats.add(selectedMeat);
-                }catch(IllegalArgumentException e){
-                    System.out.println("Invalid meat type: " + meat);
+
+        for (String meatNumber : meatNumbers) {
+            int number = Integer.parseInt(meatNumber.trim());
+
+            boolean isValidMeat = false;
+            for (MeatType meatType : MeatType.values()) {
+                if (meatType.getValue() == number) {
+                    selectedMeats.add(meatType);
+                    isValidMeat = true;
+                    break;
                 }
+            }
+
+            if (!isValidMeat) {
+                System.out.println("Invalid Input: " + number);
             }
         }
 
-        System.out.println("Please choose which CHEESE: (separated by commas(,)) ");
+        System.out.println("Do you want to add extra meat? (Y/N)");
+        String addExtraMeatInput = userScanner.nextLine();
+        boolean addExtraMeat = addExtraMeatInput.equalsIgnoreCase("y");
+
+        System.out.println("Please enter the NUMBER of the CHEESE/s you want added: ");
         for (CheeseType cheeseType : CheeseType.values()) {
-            System.out.println(cheeseType);
+            System.out.println("\t" + cheeseType.getValue() + " * " + cheeseType);
         }
         String cheeseInput = userScanner.nextLine();
+        String[] cheeseNumbers = cheeseInput.split(" ");
         ArrayList<CheeseType> selectedCheeseTypes = new ArrayList<>();
-        if (!cheeseInput.isEmpty()) {
-            String[] cheeseTypes = cheeseInput.split(",");
-            for (String cheese : cheeseTypes){
-                try {
-                    CheeseType selectedCheeseType = CheeseType.valueOf(cheese.trim().toUpperCase());
-                    selectedCheeseTypes.add(selectedCheeseType);
-                }catch (IllegalArgumentException e) {
-                    System.out.println("Invalid cheese type: " + cheese);
+
+        for (String cheeseNumber : cheeseNumbers) {
+            int number = Integer.parseInt(cheeseNumber.trim());
+
+            boolean isValidCheese = false;
+            for (CheeseType cheeseType : CheeseType.values()) {
+                if (cheeseType.getValue() == number) {
+                    selectedCheeseTypes.add(cheeseType);
+                    isValidCheese = true;
+                    break;
                 }
+            }
+            if (!isValidCheese) {
+                System.out.println("Invalid Input: " + number);
             }
         }
 
-        System.out.println("Please choose which FREE TOPPING (please separate by commas(,)) or press ENTER to skip: ");
+        System.out.println("Do you want extra cheese? (Y?N)");
+        String extraCheeseInput = userScanner.nextLine();
+        boolean addExtraCheese = extraCheeseInput.equalsIgnoreCase("y");
+
+        System.out.println("Please enter the NUMBER of the FREE TOPPING/s you want added or press ENTER to skip: ");
         for (FreeTopping freeTopping : FreeTopping.values()) {
-            System.out.println(freeTopping);
+            System.out.println("\t" + freeTopping.getValue() + " * " + freeTopping);
         }
 
         String toppingsInput = userScanner.nextLine();
+        String[] toppingsNumbers = toppingsInput.split(" ");
         ArrayList<FreeTopping> selectedToppings = new ArrayList<>();
-        if (toppingsInput.isEmpty()) {
-            String[] toppingTypes = toppingsInput.split(",");
-                for (String topping : toppingTypes) {
-                    try{
-                        FreeTopping selectedTopping = FreeTopping.valueOf(topping.trim().toUpperCase());
-                        selectedToppings.add(selectedTopping);
-                    }catch (IllegalArgumentException e) {
-                        System.out.println("Invalid topping: " + topping);
-                    }
+
+        for (String toppingNumber : toppingsNumbers) {
+            int number = Integer.parseInt(toppingNumber.trim());
+
+            boolean isValidTopping = false;
+            for (FreeTopping freeTopping : FreeTopping.values()) {
+                if (freeTopping.getValue() == number) {
+                    selectedToppings.add(freeTopping);
+                    isValidTopping = true;
+                    break;
                 }
             }
+        }
 
-            Sandwich customSandwich = new Sandwich(selectedSize, isToasted, selectedBread);
+        if (toppingsInput.isEmpty()) {
+            String[] toppingTypes = toppingsInput.split(",");
+            for (String topping : toppingTypes) {
+                try {
+                    FreeTopping selectedTopping = FreeTopping.valueOf(topping.trim().toUpperCase());
+                    selectedToppings.add(selectedTopping);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid topping: " + topping);
+                }
+            }
+        }
+
+        Sandwich customSandwich = new Sandwich(selectedSize, isToasted, selectedBread);
 
         for (MeatType meatType : selectedMeats) {
-            customSandwich.addMeat(meatType, false);
+            customSandwich.addMeat(meatType, addExtraMeat);
         }
 
         for (CheeseType cheeseType : selectedCheeseTypes) {
-            customSandwich.addCheese(cheeseType, false);
+            customSandwich.addCheese(cheeseType, addExtraCheese);
         }
 
-        for (FreeTopping topping : selectedToppings){
+        for (FreeTopping topping : selectedToppings) {
             customSandwich.addFreeTopping(topping);
         }
 
         if (currentOrder != null) {
-            currentOrder.getOrderItems().add(customSandwich);
-            System.out.println("Custom sandwich added to your order.");
-        } else {
+                    currentOrder.getOrderItems().add(customSandwich);
+                    System.out.printf("Custom sandwich added to your order: %s %s %s bread\n" +
+                                    "Meat: %s\n" +
+                                    "Cheese: %s\n" +
+                                    "Free Toppings: %s\n" +
+                                    "Total Cost: $%.2f",
+                            customSandwich.getSize(), customSandwich.isToasted(), customSandwich.getBreadType(),
+                            customSandwich.getMeats(),customSandwich.getCheeses(), customSandwich.getFreeToppings(),
+                            customSandwich.getPrice());
+                } else {
             System.out.println("ERROR");
         }
     }
 
-    public static void viewOrder(){
+    public static void viewOrder () {
         if (currentOrder == null || currentOrder.getOrderItems().isEmpty()) {
             System.out.println("Your cart is empty.");
-        }else{
+        } else {
             System.out.println("Your order contains the following items: ");
 
             for (OrderItem orderItems : currentOrder.getOrderItems()) {
                 System.out.println(orderItems.toString());
             }
         }
-        OrderManager.readOrder();
+        OrderManager.readOrder(orderNumber);
         System.out.println("Please choose from the following options: ");
         System.out.println("P * to CHECKOUT and PAY");
         System.out.println("A * to ADD to your order");
@@ -243,9 +346,9 @@ public class Screens {
         System.out.println("X * to CANCEL your order");
         String viewOrderChoice = userScanner.nextLine();
 
-        switch (viewOrderChoice.toLowerCase()){
+        switch (viewOrderChoice.toLowerCase()) {
             case "p":
-                OrderManager.readOrder();
+                OrderManager.readOrder(orderNumber);
                 System.out.println("Please enter cash AMOUNT: ");
                 double userAmount = userScanner.nextDouble();
 
@@ -268,10 +371,8 @@ public class Screens {
 
             case "r":
                 System.out.println("Enter the index of the item to remove: ");
-                //I have to figure out how to make it so that the user does not input the index of the AL
-//                String itemIndex = userScanner.nextLine();
-//                userScanner.nextLine();
-//                currentOrder.removeItem();
+
+
                 break;
 
             case "x":
@@ -282,7 +383,7 @@ public class Screens {
                     System.out.println("Order canceled.Your cart has been cleared.");
                     currentOrder = null;
                     homeScreen();
-                }else{
+                } else {
                     System.out.println("Order cancellation aborted.");
                 }
                 break;
@@ -293,5 +394,4 @@ public class Screens {
         }
 
     }
-
 }

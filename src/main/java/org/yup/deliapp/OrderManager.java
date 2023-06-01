@@ -13,7 +13,7 @@ public class OrderManager {
 
     public static void writeOrder(Order order) {
 
-        UUID orderID = UUID.randomUUID();
+        UUID orderID = order.getOrderNumber();
         String fileName = generateFileName(orderID);
 
         try {
@@ -29,10 +29,9 @@ public class OrderManager {
         }
     }
 
-    public static void readOrder() {
+    public static void readOrder(UUID orderID) {
 
-        UUID currentOrderID = UUID.randomUUID();
-        String fileName = generateFileName(currentOrderID);
+        String fileName = generateFileName(orderID);
 
         try {
             FileReader receipt2 = new FileReader(fileName);
