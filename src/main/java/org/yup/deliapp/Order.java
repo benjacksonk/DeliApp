@@ -1,26 +1,22 @@
 package org.yup.deliapp;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Order {
 
-    private int orderNumber;
-//    private ArrayList<Sandwich> sandwiches;
-//    private ArrayList<Chips> chips;
-//    private ArrayList<Drinks> drinks;
+    private String orderNumber;
     private ArrayList<OrderItem> orderItems;
 
-    public Order(int orderNumber, ArrayList<OrderItem> orderItems) {
+    public Order(String orderNumber, ArrayList<OrderItem> orderItems) {
         this.orderNumber = orderNumber;
         this.orderItems = orderItems;
     }
 
-    public int getOrderNumber() {
-        return orderNumber;
-    }
-
-    public void setOrderNumber(int orderNumber) {
-        this.orderNumber = orderNumber;
+    public String getOrderNumber() {
+        UUID generatedOrderID = UUID.randomUUID();
+        String printedOrderID = generatedOrderID.toString().substring(0, 5);
+        return printedOrderID;
     }
 
     public ArrayList<OrderItem> getOrderItems() {

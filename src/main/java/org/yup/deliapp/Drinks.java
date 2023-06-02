@@ -48,4 +48,16 @@ public class Drinks extends OrderItem {
     public void setFlavor(DrinkFlavor flavor) {
         this.flavor = flavor;
     }
+
+    @Override
+    public String stringFormat() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("DRINK: ")
+                .append(getSize())
+                .append(" ")
+                .append(getFlavor())
+                .append(" - $")
+                .append(getPrice());
+        return builder.toString();
+    }
 }

@@ -90,4 +90,39 @@ public class Sandwich extends OrderItem {
     public ArrayList<FreeTopping> getFreeToppings() {
         return freeToppings;
     }
+
+    @Override
+    public String stringFormat() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("CUSTOM SANDWICH: ")
+                .append("\n")
+                .append(size)
+                .append(isToasted ? " toasted" : "")
+                .append(" ")
+                .append(breadType)
+                .append("\n");
+
+        builder.append("MEAT: ");
+        for (Meat meat : meats) {
+            builder.append(meat.getMeatType()).append(", ");
+        }
+        builder.delete(builder.length() - 2, builder.length()); // Remove the extra comma and space
+
+        builder.append("\nCHEESE: ");
+        for (Cheese cheese : cheeses) {
+            builder.append(cheese.getCheeseType()).append(", ");
+        }
+        builder.delete(builder.length() - 2, builder.length()); // Remove the extra comma and space
+
+        builder.append("\nFREE TOPPINGS: ");
+        for (FreeTopping topping : freeToppings) {
+            builder.append(topping).append(", ");
+        }
+        builder.delete(builder.length() - 2, builder.length()); // Remove the extra comma and space
+
+        builder.append("\nSANDWICH TOTAL: $").append(String.format("%.2f", getPrice()));
+
+        return builder.toString();
+    }
+
 }

@@ -13,17 +13,37 @@ public class Chips extends OrderItem {
     }
 
     public enum chipOptions {
-        ORIGINAL_LAYS,
-        FRITOS,
-        BBQ_LAYS,
-        DORITOS,
-        BLUE_DORITOS,
-        ORIGINAL_SUNCHIPS,
-        CHEETOS,
-        TOSTITOS
+        ORIGINAL_LAYS(1),
+        FRITOS(2),
+        BBQ_LAYS(3),
+        DORITOS(4),
+        BLUE_DORITOS(5),
+        ORIGINAL_SUNCHIPS(6),
+        CHEETOS(7),
+        TOSTITOS(8);
+
+        private final int value;
+
+        chipOptions(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
     }
 
     public chipOptions getChipFlavor() {
         return chipFlavor;
+    }
+
+    @Override
+    public String stringFormat(){
+        StringBuilder builder = new StringBuilder();
+        builder.append("CHIP: ")
+                .append(getChipFlavor())
+                .append(" - $")
+                .append(getPrice());
+        return builder.toString();
     }
 }

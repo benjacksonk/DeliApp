@@ -13,7 +13,7 @@ public class OrderManager {
 
     public static void writeOrder(Order order) {
 
-        UUID orderID = UUID.randomUUID();
+        String orderID = order.getOrderNumber();
         String fileName = generateFileName(orderID);
 
         try {
@@ -21,7 +21,7 @@ public class OrderManager {
             BufferedWriter receiptWriter = new BufferedWriter(receipt);
             receiptWriter.write(orderToString(order));
             receiptWriter.close();
-            System.out.println("Order written to receipt: " + fileName);
+            System.out.println("Order No: " + orderID + " SUCCESSFULLY PLACED!" + "\n");
 
         } catch (IOException e) {
             System.out.println("ERROR: Could not write receipt.");
@@ -29,10 +29,9 @@ public class OrderManager {
         }
     }
 
-    public static void readOrder() {
+    public static void readOrder(String orderID) {
 
-        UUID currentOrderID = UUID.randomUUID();
-        String fileName = generateFileName(currentOrderID);
+        String fileName = generateFileName(orderID);
 
         try {
             FileReader receipt2 = new FileReader(fileName);
@@ -50,12 +49,12 @@ public class OrderManager {
         }
     }
 
-    private static String generateFileName(UUID orderID) {
+    private static String generateFileName(String orderID) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter receiptFormat = DateTimeFormatter.ofPattern("yyyy.MM.dd_hh:mm:ss");
         String receiptDateTime = currentDateTime.format(receiptFormat);
 
-        return ordersDirectory + receiptDateTime + "_OrderID:" + orderID.toString() + ".txt";
+        return ordersDirectory+ receiptDateTime + "_OrderID:" + orderID.toString() + ".txt";
 
     }
 
@@ -65,7 +64,7 @@ public class OrderManager {
 
         ArrayList<OrderItem> orderItems = order.getOrderItems();
         for (OrderItem item : orderItems) {
-            receiptBuilder.append(itemToString(item)).append("\n");
+            receiptBuilder.append(itemToString(item)).append("\n").append(order.calculateTotalCost());
         }
 
         return receiptBuilder.toString();
@@ -74,23 +73,21 @@ public class OrderManager {
     private static String itemToString(OrderItem item) {
         if (item instanceof Sandwich) {
             Sandwich sandwich = (Sandwich) item;
-            return "Sandwich: " + sandwich.getBreadType() + sandwich.getCheeses() + sandwich.getMeats()
-                    + sandwich.getFreeToppings() + sandwich.getSize() + "\n" +
-                    "Sandwich Total Cost: " + sandwich.getPrice();
+            return sandwich.stringFormat() + "\nSandwich Total Cost: " + sandwich.getPrice();
         }else if (item instanceof Drinks) {
             Drinks drink = (Drinks) item;
-            return "Drink: " + drink.getFlavor() + "Drink Cost: " + drink.getPrice();
+            return drink.stringFormat();
         }else if (item instanceof Chips) {
             Chips chips = (Chips) item;
-            return "Chips: " + chips.getChipFlavor() + "Chip Cost: " + chips.getPrice();
+            return chips.stringFormat();
         }else {
             return "Unknown item";
         }
     }
 
-    public static void stringToOrder(String orderStringFormat){
-
-    }
+//    public static void stringToOrder(String orderStringFormat){
+//
+//    }
 
 }
 
