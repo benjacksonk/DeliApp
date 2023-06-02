@@ -1,5 +1,6 @@
 package org.yup.deliapp;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class Screens {
@@ -7,7 +8,8 @@ public class Screens {
     static Scanner userScanner = new Scanner(System.in); //static scanner - will be able to use it throughout the class
     static ArrayList<OrderItem> orderList = new ArrayList<OrderItem>();
     static UUID orderNumber = UUID.randomUUID();
-    static Order currentOrder = new Order(orderNumber, orderList);
+    static String formattedOrderNumber = orderNumber.toString().substring(0, 5);
+    static Order currentOrder = new Order(formattedOrderNumber, orderList);
 
     public static String homeScreen(){
         //the main screen or main menu
@@ -19,50 +21,55 @@ public class Screens {
 
     }
 
-    public static String orderScreen(){
+    public static String orderScreen() {
         //where users can do basically everything with their order: add, view, cancel, pay
-        System.out.println("Please choose from the following OPTIONS: ");
-        System.out.println("\tS * Add SANDWICH");
-        System.out.println("\tC * Add CHIPS");
-        System.out.println("\tD * Add DRINKS");
-        System.out.println("\tV * To VIEW Order");
-        System.out.println("\tX * CANCEL Order");
-        System.out.println("\tH * Back to HOME screen");
-        System.out.print("Please ENTER your selection: ");
-        String orderScreenChoice = userScanner.nextLine();
+
+//        boolean isOrdering = true;
+//
+//        while (isOrdering) {
+            System.out.println("Please choose from the following OPTIONS: ");
+            System.out.println("\tS * Add SANDWICH");
+            System.out.println("\tC * Add CHIPS");
+            System.out.println("\tD * Add DRINKS");
+            System.out.println("\tV * To VIEW Order");
+            System.out.println("\tX * CANCEL Order");
+            System.out.println("\tH * Back to HOME screen");
+            System.out.print("Please ENTER your selection: ");
+            String orderScreenChoice = userScanner.nextLine();
 
 
-        switch (orderScreenChoice.toLowerCase()){
-            case "s":
-                sandwichOrder();
-                break;
+            switch (orderScreenChoice.toLowerCase()) {
+                case "s":
+                    sandwichOrder();
+                    break;
 
-            case "c":
-                chipOrder();
-                break;
+                case "c":
+                    chipOrder();
+                    break;
 
-            case "d":
-                drinkOrder();
-                break;
+                case "d":
+                    drinkOrder();
+                    break;
 
-            case "v":
-                viewOrder();
-                break;
+                case "v":
+                    viewOrder();
+                    break;
 
-            case "x":
-                cancelOrder();
-                break;
+                case "x":
+                    cancelOrder();
+                    break;
 
-            default:
-                System.out.println("Please enter a VIABLE option.");
-                orderScreen();
-                break;
+                default:
+                    System.out.println("Please enter a VIABLE option.");
+                    orderScreen();
+                    break;
+            }
+
+//        }
+
+//            orderScreen();
+            return "";
         }
-
-        orderScreen();
-
-        return "";
-    }
 
     public static void cancelOrder(){
         currentOrder = null;
@@ -102,6 +109,8 @@ public class Screens {
                     currentOrder.getOrderItems().add(drinkChoice);
                     System.out.printf("%s %s: $%.2f successfully added to your order.\n" + "\n",
                             drinkChoice.getSize(), drinkChoice.getFlavor(), drinkChoice.getPrice());
+
+                    orderScreen();
 
                 }else{
                     System.out.println("Invalid size choice. Please try again.");
@@ -147,6 +156,8 @@ public class Screens {
                 System.out.printf("%s: $%.2f successfully added to your order.\n" + "\n",
                         chipOrder.getChipFlavor(), chipOrder.getPrice());
 
+                orderScreen();
+
             }else {
                 System.out.println("Invalid chip choice. Please try again");
                 chipOrder();
@@ -177,9 +188,10 @@ public class Screens {
                 break;
 
             }
-            if (selectedSize == null) {
-                System.out.println("Invalid Input.");
-            }
+        }
+
+        if (selectedSize == null) {
+            System.out.println("Invalid Input.");
         }
 
         System.out.println("Please enter the NUMBER of the type of BREAD: ");
@@ -261,7 +273,7 @@ public class Screens {
             }
         }
 
-        System.out.println("Do you want extra cheese? (Y?N)");
+        System.out.println("Do you want extra cheese? (Y/N)");
         String extraCheeseInput = userScanner.nextLine();
         boolean addExtraCheese = extraCheeseInput.equalsIgnoreCase("y");
 
@@ -315,17 +327,13 @@ public class Screens {
 
         if (currentOrder != null) {
                     currentOrder.getOrderItems().add(customSandwich);
-                    System.out.printf("Custom sandwich added to your order: %s %s %s bread\n" +
-                                    "Meat: %s\n" +
-                                    "Cheese: %s\n" +
-                                    "Free Toppings: %s\n" +
-                                    "Total Cost: $%.2f",
-                            customSandwich.getSize(), customSandwich.isToasted(), customSandwich.getBreadType(),
-                            customSandwich.getMeats(),customSandwich.getCheeses(), customSandwich.getFreeToppings(),
-                            customSandwich.getPrice());
+                    System.out.println(customSandwich.stringFormat());
                 } else {
             System.out.println("ERROR");
         }
+
+        orderScreen();
+
     }
 
     public static void viewOrder () {
@@ -335,10 +343,12 @@ public class Screens {
             System.out.println("Your order contains the following items: ");
 
             for (OrderItem orderItems : currentOrder.getOrderItems()) {
-                System.out.println(orderItems.toString());
+                System.out.println(orderItems.getItemNumber() + ". " + orderItems.stringFormat() + "\n");
             }
+
+            System.out.println("\t" + "TOTAL: $" + currentOrder.calculateTotalCost() + "\n");
         }
-        OrderManager.readOrder(orderNumber);
+
         System.out.println("Please choose from the following options: ");
         System.out.println("P * to CHECKOUT and PAY");
         System.out.println("A * to ADD to your order");
@@ -348,18 +358,24 @@ public class Screens {
 
         switch (viewOrderChoice.toLowerCase()) {
             case "p":
-                OrderManager.readOrder(orderNumber);
-                System.out.println("Please enter cash AMOUNT: ");
+                System.out.println("TOTAL: $" + currentOrder.calculateTotalCost());
+                System.out.print("Please enter cash AMOUNT: $");
                 double userAmount = userScanner.nextDouble();
-
                 double totalCost = currentOrder.calculateTotalCost();
 
                 if (userAmount >= totalCost) {
-                    System.out.println("Payment successful. Your order has been placed");
+                    double change = userAmount - totalCost;
+                    DecimalFormat decimalFormat = new DecimalFormat("#.##");
+                    String formattegChange = decimalFormat.format(change);
 
+                    System.out.println(userAmount  + " - " + totalCost + " = " + formattegChange);
+                    System.out.println("Transaction COMPLETED.");
                     OrderManager.writeOrder(currentOrder);
 
                     currentOrder = null;
+
+                    homeScreen();
+
                 } else {
                     System.out.println("Insufficient payment amount. Please try again.");
                 }
@@ -370,13 +386,24 @@ public class Screens {
                 break;
 
             case "r":
-                System.out.println("Enter the index of the item to remove: ");
+                System.out.println("Enter the NUMBER of the item to remove: ");
+                int itemNumber = userScanner.nextInt();
+                userScanner.nextLine();
 
+                currentOrder.getOrderItems();
+
+                if (itemNumber >= 1 && itemNumber <= orderList.size()){
+                    OrderItem itemToRemove = orderList.get(itemNumber - 1);
+                    currentOrder.removeItem(itemToRemove);
+                    System.out.println("Item removed from your order.");
+                }else{
+                    System.out.println("Invalid item number. Please try again.");
+                }
 
                 break;
 
             case "x":
-                System.out.println("Are you sure you want to cancel your order? (Y?N)");
+                System.out.println("Are you sure you want to cancel your order? (Y/N)");
                 String cancelConfirmation = userScanner.nextLine();
 
                 if (cancelConfirmation.equalsIgnoreCase("y")) {
@@ -394,4 +421,5 @@ public class Screens {
         }
 
     }
+
 }

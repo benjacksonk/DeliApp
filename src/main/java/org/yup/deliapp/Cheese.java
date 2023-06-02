@@ -42,4 +42,8 @@ public class Cheese extends PremiumToppings {
             return regularPrice;
         }
     }
+
+    public CheeseType getCheeseType() {
+        return cheeseType;
+    }
 }

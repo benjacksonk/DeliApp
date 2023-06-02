@@ -1,0 +1,6 @@
+Order Number: 57c6e
+Sandwich: RYE[org.yup.deliapp.Cheese@1376c05c, org.yup.deliapp.Cheese@51521cc1][org.yup.deliapp.Meat@1b4fb997, org.yup.deliapp.Meat@deb6432, org.yup.deliapp.Meat@28ba21f3][LETTUCE, JALAPENOS, GUACAMOLE, MAYO]EIGHT_INCHES
+Sandwich Total Cost: 20.2
+21.7Chips: ORIGINAL_SUNCHIPS
+Chip Cost: 1.5
+21.7

@@ -42,4 +42,8 @@ public class Meat extends PremiumToppings {
             return regularPrice;
         }
     }
+
+    public MeatType getMeatType() {
+        return meatType;
+    }
 }

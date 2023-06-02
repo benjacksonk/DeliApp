@@ -33,9 +33,17 @@ public class Chips extends OrderItem {
         }
     }
 
-
-
     public chipOptions getChipFlavor() {
         return chipFlavor;
+    }
+
+    @Override
+    public String stringFormat(){
+        StringBuilder builder = new StringBuilder();
+        builder.append("CHIP: ")
+                .append(getChipFlavor())
+                .append(" - $")
+                .append(getPrice());
+        return builder.toString();
     }
 }

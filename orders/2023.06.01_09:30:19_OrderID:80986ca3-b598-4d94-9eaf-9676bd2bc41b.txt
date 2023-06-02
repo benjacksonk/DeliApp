@@ -1,0 +1,3 @@
+Order Number: 80986ca3-b598-4d94-9eaf-9676bd2bc41b
+Chips: BLUE_DORITOSChip Cost: 1.5
+Drink: LEMONADEDrink Cost: 3.0

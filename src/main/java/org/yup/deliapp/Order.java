@@ -5,16 +5,18 @@ import java.util.UUID;
 
 public class Order {
 
-    private UUID orderNumber;
+    private String orderNumber;
     private ArrayList<OrderItem> orderItems;
 
-    public Order(UUID orderNumber, ArrayList<OrderItem> orderItems) {
+    public Order(String orderNumber, ArrayList<OrderItem> orderItems) {
         this.orderNumber = orderNumber;
         this.orderItems = orderItems;
     }
 
-    public UUID getOrderNumber() {
-        return orderNumber;
+    public String getOrderNumber() {
+        UUID generatedOrderID = UUID.randomUUID();
+        String printedOrderID = generatedOrderID.toString().substring(0, 5);
+        return printedOrderID;
     }
 
     public ArrayList<OrderItem> getOrderItems() {

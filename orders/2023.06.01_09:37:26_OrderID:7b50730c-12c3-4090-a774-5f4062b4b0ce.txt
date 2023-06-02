@@ -1,0 +1,3 @@
+Order Number: 7b50730c-12c3-4090-a774-5f4062b4b0ce
+Chips: ORIGINAL_SUNCHIPSChip Cost: 1.5
+Drink: DR_PEPPERDrink Cost: 2.5

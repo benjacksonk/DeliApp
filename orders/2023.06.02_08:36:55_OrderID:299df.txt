@@ -1,0 +1,6 @@
+Order Number: ee9bf
+Chips: ORIGINAL_SUNCHIPS
+Chip Cost: 1.5
+4.5Drink: LARGE DIET_COKE
+Drink Cost: 3.0
+4.5

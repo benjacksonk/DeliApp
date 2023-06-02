@@ -1,0 +1,3 @@
+Order Number: 8a146561-9ccd-4659-90b9-fc334f10bb87
+Drink: BLUE_POWERADEDrink Cost: 3.0
+Chips: BLUE_DORITOSChip Cost: 1.5
