@@ -16,7 +16,7 @@ public class Screens {
         System.out.println("Please choose from the following OPTIONS: ");
         System.out.println("\tO * NEW ORDER");
         System.out.println("\tX * EXIT");
-        System.out.print("Please enter your selection: ");
+        System.out.print("Please ENTER your selection: ");
         return userScanner.nextLine();
 
     }
@@ -350,10 +350,11 @@ public class Screens {
         }
 
         System.out.println("Please choose from the following options: ");
-        System.out.println("P * to CHECKOUT and PAY");
-        System.out.println("A * to ADD to your order");
-        System.out.println("R * to REMOVE item from your order");
-        System.out.println("X * to CANCEL your order");
+        System.out.println("\tP * to CHECKOUT and PAY");
+        System.out.println("\tA * to ADD to your order");
+        System.out.println("\tR * to REMOVE item from your order");
+        System.out.println("\tX * to CANCEL your order");
+        System.out.print("Please ENTER your selection: ");
         String viewOrderChoice = userScanner.nextLine();
 
         switch (viewOrderChoice.toLowerCase()) {
@@ -368,7 +369,7 @@ public class Screens {
                     DecimalFormat decimalFormat = new DecimalFormat("#.##");
                     String formattegChange = decimalFormat.format(change);
 
-                    System.out.println(userAmount  + " - " + totalCost + " = " + formattegChange);
+                    System.out.println("$" + userAmount  + " - " + "$" + totalCost + " = " + "$" + formattegChange + "\n");
                     System.out.println("Transaction COMPLETED.");
                     OrderManager.writeOrder(currentOrder);
 

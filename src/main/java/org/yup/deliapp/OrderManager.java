@@ -21,7 +21,7 @@ public class OrderManager {
             BufferedWriter receiptWriter = new BufferedWriter(receipt);
             receiptWriter.write(orderToString(order));
             receiptWriter.close();
-            System.out.println("Order No: " + orderID + " SUCCESSFULLY PLACED!");
+            System.out.println("Order No: " + orderID + " SUCCESSFULLY PLACED!" + "\n");
 
         } catch (IOException e) {
             System.out.println("ERROR: Could not write receipt.");
